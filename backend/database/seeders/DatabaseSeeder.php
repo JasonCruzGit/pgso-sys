@@ -14,12 +14,14 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = collect(RoleSlug::cases())->map(fn (RoleSlug $role) => Role::create([
-            'name' => $role->displayName(),
-            'slug' => $role->value,
-            'description' => "Role: {$role->value}",
-            'permissions' => $role->permissions(),
-        ]));
+        $roles = collect(RoleSlug::cases())->map(fn (RoleSlug $role) => Role::updateOrCreate(
+            ['slug' => $role->value],
+            [
+                'name' => $role->displayName(),
+                'description' => "Role: {$role->value}",
+                'permissions' => $role->permissions(),
+            ],
+        ));
 
         $departments = collect([
             ['name' => 'Provincial General Services Office', 'code' => 'PGSO'],
@@ -30,7 +32,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Provincial Accountant Office', 'code' => 'PACCO'],
             ['name' => 'Provincial Budget Office', 'code' => 'PBO'],
             ['name' => 'Provincial Agriculture Office', 'code' => 'PAO'],
-        ])->map(fn ($d) => Department::create([...$d, 'is_active' => true]));
+        ])->map(fn ($d) => Department::updateOrCreate(
+            ['code' => $d['code']],
+            [...$d, 'is_active' => true],
+        ));
 
         collect([
             ['name' => 'Office Supplies', 'code' => 'OS'],
@@ -40,7 +45,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Vehicles & Fleet', 'code' => 'VEH'],
             ['name' => 'Maintenance Equipment', 'code' => 'MNT'],
             ['name' => 'Emergency & Safety', 'code' => 'EMG'],
-        ])->each(fn ($c) => Category::create([...$c, 'is_active' => true]));
+        ])->each(fn ($c) => Category::updateOrCreate(
+            ['code' => $c['code']],
+            [...$c, 'is_active' => true],
+        ));
 
         $this->call(SupplierSeeder::class);
 
@@ -56,7 +64,9 @@ class DatabaseSeeder extends Seeder
         $pvo = $departments->firstWhere('code', 'PVO');
         $pacco = $departments->firstWhere('code', 'PACCO');
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'admin@gso.palawan.gov.ph'],
+            [
             'name' => 'System Administrator',
             'email' => 'admin@gso.palawan.gov.ph',
             'password' => Hash::make('Admin@12345'),
@@ -67,7 +77,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'officer@gso.palawan.gov.ph'],
+            [
             'name' => 'Mercy M. Bontao, MPA',
             'email' => 'officer@gso.palawan.gov.ph',
             'password' => Hash::make('Officer@12345'),
@@ -78,7 +90,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'auditor@gso.palawan.gov.ph'],
+            [
             'name' => 'Yolanda L. Caabay',
             'email' => 'auditor@gso.palawan.gov.ph',
             'password' => Hash::make('Auditor@12345'),
@@ -89,7 +103,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'fleet@gso.palawan.gov.ph'],
+            [
             'name' => 'Fleet Operations Officer',
             'email' => 'fleet@gso.palawan.gov.ph',
             'password' => Hash::make('Fleet@12345'),
@@ -100,7 +116,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'documents@gso.palawan.gov.ph'],
+            [
             'name' => 'Document Tracking Officer',
             'email' => 'documents@gso.palawan.gov.ph',
             'password' => Hash::make('Docs@12345'),
@@ -112,7 +130,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'docs.admin@gso.palawan.gov.ph'],
+            [
             'name' => 'Document Tracking Admin',
             'email' => 'docs.admin@gso.palawan.gov.ph',
             'password' => Hash::make('DocsAdmin@12345'),
@@ -123,7 +143,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'kenneth.panganiban@pvo.palawan.gov.ph'],
+            [
             'name' => 'Kenneth M. Panganiban',
             'email' => 'kenneth.panganiban@pvo.palawan.gov.ph',
             'password' => Hash::make('Employee@12345'),
@@ -134,7 +156,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'virna.devera@pacco.palawan.gov.ph'],
+            [
             'name' => 'Virna Asuncion M. De Vera',
             'email' => 'virna.devera@pacco.palawan.gov.ph',
             'password' => Hash::make('Employee@12345'),
@@ -145,7 +169,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'jay.garciano@pacco.palawan.gov.ph'],
+            [
             'name' => 'Jay Emmanuel C. Garciano',
             'email' => 'jay.garciano@pacco.palawan.gov.ph',
             'password' => Hash::make('Employee@12345'),
@@ -156,7 +182,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'jason.cruz@pgso.palawan.gov.ph'],
+            [
             'name' => 'Jason R. Cruz',
             'email' => 'jason.cruz@pgso.palawan.gov.ph',
             'password' => Hash::make('Employee@12345'),
@@ -167,7 +195,9 @@ class DatabaseSeeder extends Seeder
             'password_changed_at' => now(),
         ]);
 
-        User::create([
+        User::updateOrCreate(
+            ['email' => 'dept@gso.palawan.gov.ph'],
+            [
             'name' => 'Department End-User (Demo)',
             'email' => 'dept@gso.palawan.gov.ph',
             'password' => Hash::make('Dept@12345'),
