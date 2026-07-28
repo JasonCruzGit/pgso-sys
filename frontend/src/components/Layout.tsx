@@ -65,6 +65,7 @@ const employeeHiddenPrefixes = ['/procurement', '/property', '/ics-records', '/p
 
 /** Menus visible only to GSO Inventory Officer (role slug: gso_inventory_officer). */
 const inventoryOfficerAllowedPaths = [
+  '/procurement/air',
   '/item-registry',
   '/procurement/mr-release',
   '/ics-records',
