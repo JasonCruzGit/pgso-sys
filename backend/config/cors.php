@@ -15,6 +15,8 @@ return [
         '#^https?://192\.168\.\d{1,3}\.\d{1,3}(:\d+)?$#',
         '#^https?://10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$#',
         '#^https?://172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}(:\d+)?$#',
+        '#^https://[\\w-]+\\.vercel\\.app$#',
+        '#^https://[\\w-]+-[\\w-]+-jasons-projects-[\\w]+\\.vercel\\.app$#',
     ],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

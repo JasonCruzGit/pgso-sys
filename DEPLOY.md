@@ -1,49 +1,59 @@
-# Deploy notes — GitHub + Vercel
+# Deploy notes — GitHub + Vercel (full stack)
 
 ## What goes where
 
 | Layer | Host |
 |-------|------|
 | Source code | [GitHub — JasonCruzGit/pgso-sys](https://github.com/JasonCruzGit/pgso-sys) |
-| Frontend (React) | **Vercel** |
-| Backend (Laravel API) | Not on Vercel — use Hostinger VPS, Railway, Fly.io, or similar |
-| Database | Local Docker Postgres now; **Supabase** Postgres for production |
+| Frontend (React/Vite) | **Vercel** project `pgso-sys` |
+| Backend (Laravel API) | **Vercel** project `pgso-sys-api` ([vercel-php](https://github.com/vercel-community/php)) |
+| Database | **Neon / Vercel Postgres** (or Supabase). Not on the serverless filesystem. |
 
-Vercel only serves the static Vite build. API calls need `VITE_API_URL` pointing at your Laravel host.
+## Live URLs
 
-## Push to GitHub
+| Resource | URL |
+|----------|-----|
+| Frontend | https://frontend-zeta-five-16.vercel.app |
+| API | https://pgso-sys-api.vercel.app |
+| GitHub | https://github.com/JasonCruzGit/pgso-sys |
 
-```bash
-cd /path/to/INV-PGP-GSO
-git init
-git add .
-git commit -m "Initial commit: PGP PGSO inventory system"
-git branch -M main
-git remote add origin https://github.com/JasonCruzGit/pgso-sys.git
-git push -u origin main
-```
+Frontend env: `VITE_API_URL=https://pgso-sys-api.vercel.app/api`
 
-## Deploy frontend with Vercel CLI
+## Deploy frontend
 
 ```bash
-npm i -g vercel
 cd frontend
-vercel login
-vercel link          # link to project; set Root Directory = frontend if linking from repo root
-vercel env add VITE_API_URL production   # e.g. https://api.your-domain.com/api
 vercel --prod
 ```
 
-Or from repo root (uses root `vercel.json`):
+Project settings: Root Directory = `frontend`, Framework = Vite.
+
+## Deploy API
 
 ```bash
+cd backend
 vercel --prod
 ```
 
-## Vercel project settings (dashboard)
+Required production env (Vercel → pgso-sys-api → Settings → Environment Variables):
 
-- **Root Directory:** `frontend`
-- **Framework Preset:** Vite
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
-- **Environment:** `VITE_API_URL` = your Laravel API base URL (must include `/api`)
+- `APP_KEY` (base64:…)
+- `JWT_SECRET`
+- `APP_URL` = `https://pgso-sys-api.vercel.app`
+- `FRONTEND_URL` = your frontend URL
+- `DB_CONNECTION` = `pgsql`
+- `DB_HOST` / `DB_PORT` / `DB_DATABASE` / `DB_USERNAME` / `DB_PASSWORD`  
+  (or a single `DATABASE_URL` if you add support)
+
+After DB is connected, run migrations once (from a machine with network access to the DB):
+
+```bash
+cd backend
+php artisan migrate --force --seed
+```
+
+## Add Postgres on Vercel
+
+1. Vercel Dashboard → **Storage** → create **Neon Postgres** (or connect Supabase).
+2. Copy connection fields into `pgso-sys-api` env vars.
+3. Redeploy API: `cd backend && vercel --prod`
