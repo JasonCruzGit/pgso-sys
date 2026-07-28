@@ -1,0 +1,43 @@
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.git/
+.cache/
+out/
+tmp/
+temp/
+logs/
+*.log
+
+# Package managers
+.pnpm-store/
+.npm/
+
+# Environment
+.env
+.env.*
+
+# Generated files
+*.zip
+*.tar
+*.gz
+
+# Media
+*.mp4
+*.mov
+*.avi
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+
+# Database
+*.sqlite
+*.db
+
+# Docker
+docker-data/
+volumes/

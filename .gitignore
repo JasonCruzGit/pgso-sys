@@ -1,0 +1,24 @@
+.env
+backend/.env
+backend/vendor/
+backend/node_modules/
+backend/storage/*.key
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+!backend/storage/**/.gitignore
+frontend/node_modules/
+frontend/dist/
+frontend/ios/
+frontend/android/
+docker/backup/*.sql.gz
+.DS_Store
+
+# Nested / local-only projects
+HRIS-RIZAL/
+.cursor/
+*.log
+.vercel/
+frontend/.vercel/
+backend/.env.tmp
